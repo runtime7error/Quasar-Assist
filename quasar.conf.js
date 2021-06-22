@@ -9,6 +9,7 @@
 const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = function (/* ctx */) {
+  publicPath: '/Quasar Todo/'
   return {
     // https://v1.quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
