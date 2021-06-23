@@ -36,7 +36,7 @@
 
    </q-drawer>
     <q-page-container v-if="!ficha" class="row text-h5 justify-center">
-      <div class="fixed-center">
+      <div class="fixed-center" style="min-width: 200px">
         <q-card class="null-card">
           <q-card-section>Parece que você não possui fichas cadastradas :( 
             <br/>Clique no botão para criar uma agora mesmo !
