@@ -37,7 +37,7 @@
    </q-drawer>
     <q-page-container v-if="!ficha" class="row text-h5 justify-center">
       <div class="fixed-center" style="min-width: 200px">
-        <q-card class="null-card">
+        <q-card bordered dark class="null-card">
           <q-card-section>Parece que você não possui fichas cadastradas :( 
             <br/>Clique no botão para criar uma agora mesmo !
             <q-btn dense rounded flat label="Criar" size="lg" style="margin-right:5px" @click="create()"/>
@@ -48,7 +48,7 @@
 
     <q-page-container v-if="ficha" class="row text-h5 justify-center">
       <div class="fixed-center">
-        <q-card class="null-card">
+        <q-card bordered dark class="null-card">
           <q-card-section>
             Criação de ficha
             </q-card-section>
@@ -91,16 +91,15 @@ export default {
 
 .header {
   font-family: 'Montserrat';
-  background: rgb(71,59,240);
-  background: linear-gradient(to bottom right, rgba(71,59,240,1) 0%, rgba(102,101,221,1) 35%);
+  background: linear-gradient(125deg, rgba(150, 59, 240, 0.672) 36.89%, rgba(137, 88, 217, 0.8) 84.8%), #FFFFFF;
+
 }
 
 .null-card{
-  color:white;
-  font-family: 'Montserrat';
-  background: linear-gradient(151.23deg, #813BF0 56.63%, #6665DD 89.09%);
+  background: linear-gradient(151.23deg, rgba(175, 92, 215, 0.71) 27.68%, #9150E4 71.7%);
   box-shadow: 5px 5px 12px -1px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
+  
   
 }
 
