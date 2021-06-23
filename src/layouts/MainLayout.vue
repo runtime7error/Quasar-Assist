@@ -17,7 +17,7 @@
               <q-icon v-if="text === ''" name="search" /> 
               <q-icon v-else name="clear" @click="text = ''" />
             </template>
-          </q-input>
+          </q-input>  
         </div>
         <div class="lt-sm">
           <q-btn
@@ -46,14 +46,61 @@
       </div>
     </q-page-container>
 
-    <q-page-container v-if="ficha" class="row text-h5 justify-center">
-      <div class="fixed-center">
-        <q-card bordered dark class="null-card">
-          <q-card-section>
-            Criação de ficha
-            </q-card-section>
-        </q-card>
+    <q-page-container v-if="ficha" class="header">
+      <q-dialog v-model="prompt" persistent>
+       <div v-if="dialog" class="q-pa-md" style="max-width: 400px">
+
+    <q-form 
+      class="q-gutter-md"
+    >
+      <q-input 
+        dense 
+        rounded 
+        outlined  
+        color="purple-4" 
+        bg-color="white"
+        placeholder="Nome"
+        lazy-rules
+        v-model="name"
+        :rules="[ val => val && val.length > 0 || 'Nome não pode ficar vazio !']"
+      />
+
+      <q-input
+        dense
+        rounded
+        outlined
+        color="purple-4"
+        bg-color="white"
+        placeholder="Idade"
+        mask="#########"  
+        lazy-rules
+        v-model="age"
+        :rules="[
+          val => val !== null && val !== '' || 'Por favor digite a idade'
+        ]"
+      />
+
+      <q-input 
+        dense 
+        rounded 
+        outlined  
+        color="purple-4" 
+        bg-color="white"
+        placeholder="Raça"
+        lazy-rules
+        v-model="breed"
+        :rules="[ val => val && val.length > 0 || 'Raça não pode ficar vazio !']"
+      />
+
+      <div>
+        <q-btn color="white" label="Cancelar" flat rounded @click="onClose()"/>
+        <q-btn color="white" label="Salvar" flat rounded @click="onSave()" class="q-ml-sm"/>
       </div>
+    </q-form>
+
+  </div>
+        
+      </q-dialog>
     </q-page-container>
   </q-layout>
 </template>
@@ -62,10 +109,16 @@
 import EssentialLink from 'components/EssentialLink.vue'
 
 export default {
+  
   data () {
     return {
       text: "",
       ficha: false,
+      prompt: false,
+      name: '',
+      age: '',
+      breed: '',
+      dialog: false,
      
       
     }
@@ -74,15 +127,28 @@ export default {
     create(){
       console.log("Ficha Criada !!!");
       this.ficha = true;
+      this.prompt = true;
+      this.dialog = true;
     },
-    
+    onSave(){
+      this.$q.notify({
+            color: 'green-4',
+            textColor: 'white',
+            icon: 'cloud_done',
+            message: 'Submitted'
+          })
+    },
+    onClose(){
+      this.dialog = false;
+      this.ficha = false;
+    }
   },
   watch: {
     
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 
 @font-face {
   font-family: Montserrat;
@@ -99,9 +165,12 @@ export default {
   background: linear-gradient(151.23deg, rgba(175, 92, 215, 0.71) 27.68%, #9150E4 71.7%);
   box-shadow: 5px 5px 12px -1px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-  
+  font-family: 'Montserrat';
   
 }
 
+.q-field--outlined:hover .q-field__control:before {
+  border-color: #ba68c8;
+}
 
 </style>
