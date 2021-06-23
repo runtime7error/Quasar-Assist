@@ -3,12 +3,12 @@
     <q-header elevation="0">
       <q-toolbar class="header">
         <q-toolbar-title class="text-h6"><strong>RPG</strong>Assist</q-toolbar-title>
-        <div class="desktop-only">
+        <div class="mobile-hide">
           <q-btn rounded flat label="Home" class="q-ml-xs"/>
           <q-btn rounded flat label="Criar" class="q-ml-xs" @click="create()"/>
           <q-btn rounded flat label="Fichas" class="q-ml-xs"/>
         </div>  
-        <div class="desktop-only">
+        <div class="mobile-hide">
           <q-input dense rounded outlined v-model="text" color="purple-4" bg-color="white" placeholder="Digite sua busca">
             <template v-slot:append>
               <q-icon v-if="text === ''" name="search" /> 
