@@ -58,18 +58,45 @@
       </div>
     </q-page-container>
 
+    <!-- Dialog de ficha criada -->
+    <div style="position: relative; top:100px; margin-left: 50px">
+      <q-page-container class="row justify-start content-end" v-if="fichaState">
+        <div style="margin-right: 30px" :key='ficha.id' v-for="ficha in containerFicha">
+          <q-card class="dialog-border null-card" @click="exibirFicha(ficha)">
 
-    <!-- Dialog da ficha -->
-    <q-page-container class="row justify-start content-end" v-if="fichaState">
-      <div style="position: relative; top: 100px; margin-left: 30px">
-        <q-card class="dialog-border null-card q-gutter-md">
-          <q-input dense rounded outlined color="purple-4" bg-color="white"
-          placeholder: this.userData.name readonly />
-          <q-btn color="red" label="Excluir" rounded @click="removeFicha" />
-        </q-card>
-      </div>
+            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
+            readonly :label="ficha.id" />
+
+            <q-input :label="ficha.name" class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
+            readonly />
+
+            <q-input :label="ficha.breed" class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
+            readonly />
+
+            <q-btn class="q-ma-lg" color="red" label="Excluir" rounded @click="removeFicha" />
+
+          </q-card>
+        </div>
+      </q-page-container>
+    </div>
+
+
+    <!-- Dialogo de Exibição -->
+    <q-page-container>
+        <q-dialog v-model="fichaDialog">
+          <div class="q-pa-md null-card dialog-border" style="max-width: 400px">
+            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
+            readonly />
+            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
+            readonly />
+            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
+            readonly />
+            <q-btn class="q-ma-lg" color="red" label="Excluir" rounded @click="removeFicha" />
+          </div>
+        </q-dialog>
     </q-page-container>
 
+    <!-- Dialog de criação -->
     <q-page-container>
       <q-dialog v-model="prompt" persistent>
         <div class="q-pa-md null-card dialog-border" style="max-width: 400px">
@@ -158,6 +185,8 @@ export default {
       fichaState: false,
       prompt: false,
       userData: [{}],
+      containerFicha: [],
+      fichaDialog: false,
     };
   },
   methods: {
@@ -168,13 +197,18 @@ export default {
       if (!this.userData) {
         return;
       }
+
       let Ficha = {
         id: Math.random(),
         name: this.name,
         age: this.age,
         breed: this.breed,
       };
+
       this.userData.push(Ficha);
+
+      this.containerFicha.push(Ficha);
+      
       this.saveFicha();
       this.Ficha = "";
     },
@@ -190,6 +224,10 @@ export default {
     removeFicha(id) {
       let index = this.Ficha.findIndex((Ficha) => Ficha.id === id);
       this.Ficha.splice(index, 1);
+    },
+    exibirFicha(){
+      console.log('exibindo ficha :D');
+      this.fichaDialog = true;
     },
   },
   watch: {},
