@@ -10,7 +10,7 @@
         <q-space></q-space>
         <div class="gt-xs">
           <q-btn rounded flat label="Home" class="q-ml-xs" />
-          <q-btn rounded flat label="Criar" class="q-ml-xs" @click="create()" />
+          <q-btn rounded flat label="Criar" class="q-ml-xs" @click="create" />
           <q-btn rounded flat label="Fichas" class="q-ml-xs" />
         </div>
         <div class="gt-xs">
@@ -34,32 +34,42 @@
         </div>
       </q-toolbar>
     </q-header>
-    <q-drawer> </q-drawer>
-    <q-page-container v-if="!ficha" class="row text-h6 ">
+
+    <q-page-container v-if="!fichaState" class="row text-h6">
       <div class="fixed-center" style="min-width: 200px">
         <q-card bordered dark class="null-card dialog-border">
           <q-card-section class="row justify-center"
-            >Parece que você não possui fichas cadastradas, clique no botão
-            para criar uma agora mesmo !
+            >Parece que você não possui fichas cadastradas, clique no botão para
+            criar uma agora mesmo !
             <q-btn
               rounded
               flat
               label="Criar"
               size="lg"
               style="margin-right: 5px"
-              @click="create()"
+              @click="create"
             />
           </q-card-section>
         </q-card>
       </div>
     </q-page-container>
 
-    <q-page-container v-if="ficha">
+    <q-page-container class="row justify-start content-end" v-if="fichaState">
+      <div style="position: relative; top: 100px; margin-left: 30px">
+        <q-card class="dialog-border null-card q-gutter-md">
+          <q-input dense rounded outlined color="purple-4" bg-color="white"
+          placeholder: this.userData.name readonly />
+          <q-btn color="red" label="Excluir" rounded @click="removeFicha" />
+        </q-card>
+      </div>
+    </q-page-container>
+
+    <q-page-container>
       <q-dialog v-model="prompt" persistent>
-        <div v-if="dialog" class="q-pa-md null-card dialog-border" style="max-width: 400px">
-          <q-form class="q-gutter-md">
+        <div class="q-pa-md null-card dialog-border" style="max-width: 400px">
+          <q-form @submit="onSave" @reset="onClose" class="q-gutter-md">
             <q-card-section>
-              <div class="text-h6 q-gutter-md " >Criação de Ficha</div>
+              <div class="text-h6 q-gutter-md">Criação de Ficha</div>
             </q-card-section>
 
             <q-input
@@ -109,17 +119,12 @@
             />
 
             <div>
-              <q-btn
-                color="red"
-                label="Cancelar"
-                rounded
-                @click="onClose()"
-              />
+              <q-btn color="red" label="Cancelar" rounded type="reset" />
               <q-btn
                 color="green"
                 label="Salvar"
                 rounded
-                @click="onSave()"
+                type="submit"
                 class="q-ml-xl"
               />
             </div>
@@ -130,35 +135,55 @@
   </q-layout>
 </template>
 
+<script src="https://unpkg.com/localbase/dist/localbase.dev.js"></script>
+
 <script>
 import EssentialLink from "components/EssentialLink.vue";
+import Localbase from "localbase";
 
 export default {
   data() {
+    let db = new Localbase("db");
     return {
       text: "",
-      ficha: false,
-      prompt: false,
       name: "",
       age: "",
       breed: "",
-      dialog: false,
+      fichaState: false,
+      prompt: false,
+      userData: [{}],
     };
   },
   methods: {
     create() {
-      console.log("Ficha Criada !!!");
-      this.ficha = true;
       this.prompt = true;
-      this.dialog = true;
     },
     onSave() {
-      this.dialog = false;
-      this.ficha = false;
+      if (!this.userData) {
+        return;
+      }
+      let Ficha = {
+        id: Math.random(),
+        name: this.name,
+        age: this.age,
+        breed: this.breed,
+      };
+      this.userData.push(Ficha);
+      this.saveFicha();
+      this.Ficha = "";
     },
     onClose() {
-      this.dialog = false;
-      this.ficha = false;
+      this.prompt = false;
+      this.fichaState = false;
+    },
+    saveFicha() {
+      console.log(this.userData);
+      this.prompt = false;
+      this.fichaState = true;
+    },
+    removeFicha(id) {
+      let index = this.Ficha.findIndex((Ficha) => Ficha.id === id);
+      this.Ficha.splice(index, 1);
     },
   },
   watch: {},
@@ -170,7 +195,7 @@ export default {
   src: url("../fonts/montserrat-v15-latin-regular.woff") format("woff");
 }
 
-div{
+div {
   color: #ffffff;
 }
 
@@ -199,11 +224,10 @@ div{
   border-color: #ba68c8;
 }
 
-.dialog-border{
+.dialog-border {
   border-color: blanchedalmond;
   border-style: groove;
   border-width: 1pt;
   border-radius: 8pt;
-
 }
 </style>
