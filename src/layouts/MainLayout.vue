@@ -1,4 +1,6 @@
 <template>
+
+  <!-- navbar -->
   <q-layout view="lHh Lpr LFf" class="header">
     <q-header elevation="0">
       <q-toolbar class="header">
@@ -35,6 +37,8 @@
       </q-toolbar>
     </q-header>
 
+
+    <!-- Tela sem ficha -->
     <q-page-container v-if="!fichaState" class="row text-h6">
       <div class="fixed-center" style="min-width: 200px">
         <q-card bordered dark class="null-card dialog-border">
@@ -54,6 +58,8 @@
       </div>
     </q-page-container>
 
+
+    <!-- Dialog da ficha -->
     <q-page-container class="row justify-start content-end" v-if="fichaState">
       <div style="position: relative; top: 100px; margin-left: 30px">
         <q-card class="dialog-border null-card q-gutter-md">
