@@ -1,5 +1,4 @@
 <template>
-
   <!-- navbar -->
   <q-layout view="lHh Lpr LFf" class="header">
     <q-header elevation="0">
@@ -37,7 +36,6 @@
       </q-toolbar>
     </q-header>
 
-
     <!-- Tela sem ficha -->
     <q-page-container v-if="!fichaState" class="row text-h6">
       <div class="fixed-center" style="min-width: 200px">
@@ -59,41 +57,115 @@
     </q-page-container>
 
     <!-- Dialog de ficha criada -->
-    <div style="position: relative; top:100px; margin-left: 50px">
+    <div style="position: relative; top: 100px">
       <q-page-container class="row justify-start content-end" v-if="fichaState">
-        <div style="margin-right: 30px" :key='ficha.id' v-for="ficha in containerFicha">
-          <q-card class="dialog-border null-card" @click="exibirFicha(ficha)">
-
-            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
-            readonly :label="ficha.id" />
-
-            <q-input :label="ficha.name" class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
-            readonly />
-
-            <q-input :label="ficha.breed" class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
-            readonly />
-
-            <q-btn class="q-ma-lg" color="red" label="Excluir" rounded @click="removeFicha" />
-
+        <div
+          class="q-ma-lg"
+          style="margin-right: 30px"
+          :key="ficha.id"
+          v-for="ficha in containerFicha"
+          @click="exibirFicha(ficha)"
+        >
+          <q-card class="dialog-border null-card">
+            <q-input
+              :label="ficha.name"
+              class="q-ma-lg"
+              dense
+              rounded
+              outlined
+              color="purple-4"
+              bg-color="white"
+              readonly
+            />
+            <!-- <q-input
+              clearable
+              clear-icon="close"
+              filled
+              color="purple-12"
+              v-model="ficha.name"
+              label="Label"
+            /> -->
+            <q-input
+              class="q-ma-lg"
+              dense
+              rounded
+              outlined
+              color="purple-4"
+              bg-color="white"
+              readonly
+              :label="ficha.age.toString()"
+            />
+            <q-input
+              :label="ficha.breed"
+              class="q-ma-lg"
+              dense
+              rounded
+              outlined
+              color="purple-4"
+              bg-color="white"
+              readonly
+            />
           </q-card>
         </div>
       </q-page-container>
     </div>
 
-
     <!-- Dialogo de Exibição -->
     <q-page-container>
-        <q-dialog v-model="fichaDialog">
-          <div class="q-pa-md null-card dialog-border" style="max-width: 400px">
-            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
-            readonly />
-            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
-            readonly />
-            <q-input class="q-ma-lg" dense rounded outlined color="purple-4" bg-color="white"
-            readonly />
-            <q-btn class="q-ma-lg" color="red" label="Excluir" rounded @click="removeFicha" />
-          </div>
-        </q-dialog>
+      <q-dialog v-model="fichaDialog">
+        <div
+          :key="ficha.id"
+          v-for="ficha in containerFicha"
+          class="q-pa-md null-card dialog-border"
+          style="max-width: 400px"
+        >
+          <q-input
+            clearable
+            v-model="ficha.name"
+            class="q-ma-lg"
+            dense
+            rounded
+            outlined
+            color="purple-4"
+            bg-color="white"
+          />
+          <q-input
+            clearable
+            v-model="ficha.age"
+            class="q-ma-lg"
+            dense
+            rounded
+            outlined
+            color="purple-4"
+            bg-color="white"
+          />
+          <q-input
+            clearable
+            v-model="ficha.breed"
+            class="q-ma-lg"
+            dense
+            rounded
+            outlined
+            color="purple-4"
+            bg-color="white"
+          />
+          <q-btn
+            class="q-ma-lg"
+            color="red"
+            label="Excluir"
+            rounded
+            @click="removeFicha(ficha.id)"
+          />
+          <q-btn
+            color="green"
+            label="Salvar"
+            rounded
+            type="submit"
+            class="q-ml-xl"
+            @click="onSave"
+          />
+        </div>
+      </q-dialog>
     </q-page-container>
 
     <!-- Dialog de criação -->
@@ -157,7 +229,7 @@
                 color="green"
                 label="Salvar"
                 rounded
-                type="submit"
+                @click="onSave"
                 class="q-ml-xl"
               />
             </div>
@@ -174,17 +246,19 @@
 import EssentialLink from "components/EssentialLink.vue";
 import Localbase from "localbase";
 
+let db = new Localbase("db");
+
 export default {
   data() {
-    let db = new Localbase("db");
     return {
       text: "",
+      data: "teste",
       name: "",
       age: "",
       breed: "",
       fichaState: false,
       prompt: false,
-      userData: [{}],
+      userData: [],
       containerFicha: [],
       fichaDialog: false,
     };
@@ -204,17 +278,13 @@ export default {
         age: this.age,
         breed: this.breed,
       };
-
-      this.userData.push(Ficha);
-
+      db.collection("fichas").add(Ficha);
       this.containerFicha.push(Ficha);
-      
       this.saveFicha();
-      this.Ficha = "";
     },
+
     onClose() {
       this.prompt = false;
-      this.fichaState = false;
     },
     saveFicha() {
       console.log(this.userData);
@@ -222,15 +292,35 @@ export default {
       this.fichaState = true;
     },
     removeFicha(id) {
-      let index = this.Ficha.findIndex((Ficha) => Ficha.id === id);
-      this.Ficha.splice(index, 1);
+      db.collection("fichas").doc({ id: id }).delete();
+      console.log("id", id);
+      this.getFicha();
     },
-    exibirFicha(){
-      console.log('exibindo ficha :D');
+    exibirFicha() {
+      console.log("exibindo ficha :D");
       this.fichaDialog = true;
     },
+    getFicha() {
+      db.collection("fichas")
+        .get()
+        .then((resp) => {
+          this.userData = resp;
+          this.containerFicha = resp;
+          console.log("ficha inicial", this.userData);
+          this.prompt = false;
+        });
+    },
+    editSave() {
+      let index = this.userData.find((resp) => Ficha.id === id);
+      db.collection("ficha").doc({ id: id }).update({});
+    },
   },
-  watch: {},
+  mounted() {
+    this.getFicha();
+    if (this.userData.length > 0) {
+      this.fichaState = !this.fichaState;
+    }
+  },
 };
 </script>
 <style lang="scss">
@@ -247,18 +337,14 @@ div {
   font-family: "Montserrat";
   background: linear-gradient(
       125deg,
-      rgba(150, 59, 240, 0.672) 36.89%,
-      rgba(137, 88, 217, 0.8) 84.8%
+      rgba(150, 59, 240, 0.672),
+      rgba(137, 88, 217, 0.8)
     ),
     #ffffff;
 }
 
 .null-card {
-  background: linear-gradient(
-    151.23deg,
-    rgba(175, 92, 215, 0.71) 27.68%,
-    #9150e4 71.7%
-  );
+  background: linear-gradient(151.23deg, rgba(175, 92, 215, 0.71), #9150e4);
   box-shadow: 5px 5px 12px -1px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
   font-family: "Montserrat";
