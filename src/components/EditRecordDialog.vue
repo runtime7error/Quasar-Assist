@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md null-card dialog-border" style="max-width: 400px">
+  <div class="q-pa-md null-card dialog-border" style="max-width: 600px; width: 70%">
     <q-input
       clearable
       v-model="editRecord.name"
@@ -128,21 +128,26 @@
     />
     <span>Características</span>
     <q-separator color="white" />
-    <q-btn
-      class="q-ma-lg"
-      color="red"
-      label="Excluir"
-      rounded
-      @click="handleDeleteRecord(record.id)"
-    />
-    <q-btn
-      color="green"
-      label="Salvar"
-      rounded
-      type="submit"
-      class="q-ml-xl"
-      @click="handleEditRecord(record.id)"
-    />
+    <div>
+      <q-btn
+        size="md"
+        class="q-mt-lg q-mr-lg"
+        color="red"
+        label="Excluir"
+        rounded
+        @click="handleDeleteRecord(record.id)"
+      />
+
+      <q-btn
+        size="md"
+        class="q-mt-lg"
+        color="green"
+        label="Salvar"
+        rounded
+        type="submit"
+        @click="handleEditRecord(record.id)"
+      />
+    </div>
   </div>
 </template>
 
@@ -168,7 +173,21 @@ export default {
   },
   // Gambiarra por conta do ciclo de vida do Vue
   beforeMount() {
-    const { id, breed, name, age, gender, kit, classe, classPowers, breedPowers, classHandicap, breedHandicap, expertise, history } = this.record
+    const {
+      id,
+      breed,
+      name,
+      age,
+      gender,
+      kit,
+      classe,
+      classPowers,
+      breedPowers,
+      classHandicap,
+      breedHandicap,
+      expertise,
+      history,
+    } = this.record
     this.editRecord = {
       id,
       breed,
@@ -182,7 +201,7 @@ export default {
       classHandicap,
       breedHandicap,
       expertise,
-      history 
+      history,
     }
   },
 }

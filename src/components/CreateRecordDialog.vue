@@ -1,5 +1,8 @@
 <template>
-  <div class="q-pa-md null-card dialog-border" style="max-width: 600px; width: 70%">
+  <div
+    class="q-pa-md null-card dialog-border"
+    style="max-width: 600px; width: 70%"
+  >
     <q-form @submit="handleSave" @reset="handleClose" class="q-gutter-md">
       <q-card-section>
         <div class="text-h6 q-gutter-md">Criação de Ficha</div>
@@ -104,7 +107,9 @@
         lazy-rules
         v-model="record.classPowers"
         :rules="[
-          value => (value && value.length > 0) || 'Vantagens de raça não pode ficar vazio !',
+          value =>
+            (value && value.length > 0) ||
+            'Vantagens de raça não pode ficar vazio !',
         ]"
         required
       />
@@ -134,7 +139,7 @@
       <span></span>
       <!-- Desvantagens de Raça -->
       <q-input
-      class="q-mb-md"
+        class="q-mb-md"
         dense
         rounded
         outlined
@@ -155,7 +160,7 @@
         placeholder="Perícias"
         v-model="record.expertise"
       />
-      <span/>
+      <span />
       <!-- História -->
       <q-input
         rounded
@@ -172,13 +177,16 @@
       <span>Características</span>
       <q-separator color="white" />
       <div>
-        <q-btn color="red" label="Cancelar" rounded type="reset" />
+        <q-btn size="md" class="q-mt-lg q-mr-lg" color="red" label="Cancelar" rounded type="reset" />
+
         <q-btn
+          size="md"
+          class="q-mt-lg"
           color="green"
           label="Salvar"
           rounded
           type="submit"
-          class="q-ml-xl"
+          @click="handleEditRecord(record.id)"
         />
       </div>
     </q-form>
