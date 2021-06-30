@@ -50,18 +50,24 @@
       elevated
       content-class="header"
       behavior="mobile"
-
+      bordered
     >
       <q-list>
         <q-item>
           <q-item-section>
-            <q-btn label="Home"  />
+            <q-btn 
+            flat
+            label="Home" 
+            rounded 
+            />
           </q-item-section>
         </q-item>
+        <q-separator inset color="purple"/>
         <q-item>
           <q-item-section>
             <q-btn
-      
+              rounded
+              flat
               label="Criar"
               @click="handleClick"
             />
