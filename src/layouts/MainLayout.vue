@@ -1,332 +1,141 @@
 <template>
-  <!-- navbar -->
   <q-layout view="lHh Lpr LFf" class="header">
-    <q-header elevation="0">
-      <q-toolbar class="header">
-        <div>
-          <q-toolbar-title class="text-h6"
-            ><strong>RPG</strong>Assist</q-toolbar-title
-          >
-        </div>
-        <q-space></q-space>
-        <div class="gt-xs">
-          <q-btn rounded flat label="Home" class="q-ml-xs" />
-          <q-btn rounded flat label="Criar" class="q-ml-xs" @click="create" />
-          <q-btn rounded flat label="Fichas" class="q-ml-xs" />
-        </div>
-        <div class="gt-xs">
-          <q-input
-            dense
-            rounded
-            outlined
-            v-model="text"
-            color="purple-4"
-            bg-color="white"
-            placeholder="Digite sua busca"
-          >
-            <template v-slot:append>
-              <q-icon v-if="text === ''" name="search" />
-              <q-icon v-else name="clear" @click="text = ''" />
-            </template>
-          </q-input>
-        </div>
-        <div class="lt-sm">
-          <q-btn flat dense round icon="menu" aria-label="menu"> </q-btn>
-        </div>
-      </q-toolbar>
-    </q-header>
+    <!-- Navbar da página -->
+    <Header @createRecord="toggleCreateRecordDialog" />
 
-    <!-- Tela sem ficha -->
-    <q-page-container v-if="!fichaState" class="row text-h6">
+    <!-- Card caso não haja ficha criada -->
+    <q-page-container v-if="records.length == 0" class="row text-h6">
       <div class="fixed-center" style="min-width: 200px">
         <q-card bordered dark class="null-card dialog-border">
-          <q-card-section class="row justify-center"
-            >Parece que você não possui fichas cadastradas, clique no botão para
-            criar uma agora mesmo !
+          <q-card-section class="row justify-center">
+            Parece que você não possui fichas cadastradas, clique no botão para
+            criar uma agora mesmo!
             <q-btn
               rounded
               flat
               label="Criar"
               size="lg"
               style="margin-right: 5px"
-              @click="create"
+              @click="toggleCreateRecordDialog"
             />
           </q-card-section>
         </q-card>
       </div>
     </q-page-container>
 
-    <!-- Dialog de ficha criada -->
-    <div style="position: relative; top: 100px">
-      <q-page-container class="row justify-start content-end" v-if="fichaState">
-        <div
-          class="q-ma-lg"
-          style="margin-right: 30px"
-          :key="ficha.id"
-          v-for="ficha in containerFicha"
-          @click="exibirFicha(ficha)"
-        >
-          <q-card class="dialog-border null-card">
-            <q-input
-              :label="ficha.name"
-              class="q-ma-lg"
-              dense
-              rounded
-              outlined
-              color="purple-4"
-              bg-color="white"
-              readonly
-            />
-            <!-- <q-input
-              clearable
-              clear-icon="close"
-              filled
-              color="purple-12"
-              v-model="ficha.name"
-              label="Label"
-            /> -->
-            <q-input
-              class="q-ma-lg"
-              dense
-              rounded
-              outlined
-              color="purple-4"
-              bg-color="white"
-              readonly
-              :label="ficha.age.toString()"
-            />
-            <q-input
-              :label="ficha.breed"
-              class="q-ma-lg"
-              dense
-              rounded
-              outlined
-              color="purple-4"
-              bg-color="white"
-              readonly
-            />
-          </q-card>
-        </div>
-      </q-page-container>
-    </div>
+    <!-- Lista de cards -->
+    <record-cards-container
+      v-else
+      :records="records"
+      @showRecord="showRecord"
+    />
 
-    <!-- Dialogo de Exibição -->
+    <!-- Diálogo de edição -->
     <q-page-container>
-      <q-dialog v-model="fichaDialog">
-        <div
-          :key="ficha.id"
-          v-for="ficha in containerFicha"
-          class="q-pa-md null-card dialog-border"
-          style="max-width: 400px"
-        >
-          <q-input
-            clearable
-            v-model="ficha.name"
-            class="q-ma-lg"
-            dense
-            rounded
-            outlined
-            color="purple-4"
-            bg-color="white"
-          />
-          <q-input
-            clearable
-            v-model="ficha.age"
-            class="q-ma-lg"
-            dense
-            rounded
-            outlined
-            color="purple-4"
-            bg-color="white"
-          />
-          <q-input
-            clearable
-            v-model="ficha.breed"
-            class="q-ma-lg"
-            dense
-            rounded
-            outlined
-            color="purple-4"
-            bg-color="white"
-          />
-          <q-btn
-            class="q-ma-lg"
-            color="red"
-            label="Excluir"
-            rounded
-            @click="removeFicha(ficha.id)"
-          />
-          <q-btn
-            color="green"
-            label="Salvar"
-            rounded
-            type="submit"
-            class="q-ml-xl"
-            @click="onSave"
-          />
-        </div>
+      <q-dialog v-model="displayEditRecordDialog">
+        <edit-record-dialog
+          :record="currentEditRecord"
+          @deleteRecord="handleDeleteRecord"
+          @editRecord="handleEditRecord"
+        />
       </q-dialog>
     </q-page-container>
 
     <!-- Dialog de criação -->
     <q-page-container>
-      <q-dialog v-model="prompt" persistent>
-        <div class="q-pa-md null-card dialog-border" style="max-width: 400px">
-          <q-form @submit="onSave" @reset="onClose" class="q-gutter-md">
-            <q-card-section>
-              <div class="text-h6 q-gutter-md">Criação de Ficha</div>
-            </q-card-section>
-
-            <q-input
-              dense
-              rounded
-              outlined
-              color="purple-4"
-              bg-color="white"
-              placeholder="Nome"
-              lazy-rules
-              v-model="name"
-              :rules="[
-                (val) =>
-                  (val && val.length > 0) || 'Nome não pode ficar vazio !',
-              ]"
-            />
-
-            <q-input
-              dense
-              rounded
-              outlined
-              color="purple-4"
-              bg-color="white"
-              placeholder="Idade"
-              mask="#########"
-              lazy-rules
-              v-model="age"
-              :rules="[
-                (val) =>
-                  (val !== null && val !== '') || 'Por favor digite a idade',
-              ]"
-            />
-
-            <q-input
-              dense
-              rounded
-              outlined
-              color="purple-4"
-              bg-color="white"
-              placeholder="Raça"
-              lazy-rules
-              v-model="breed"
-              :rules="[
-                (val) =>
-                  (val && val.length > 0) || 'Raça não pode ficar vazio !',
-              ]"
-            />
-
-            <div>
-              <q-btn color="red" label="Cancelar" rounded type="reset" />
-              <q-btn
-                color="green"
-                label="Salvar"
-                rounded
-                @click="onSave"
-                class="q-ml-xl"
-              />
-            </div>
-          </q-form>
-        </div>
+      <q-dialog v-model="displayCreateRecordDialog" persistent>
+        <create-record-dialog
+          v-if="displayCreateRecordDialog"
+          @close="toggleCreateRecordDialog"
+          @create="handleCreateRecord"
+        />
       </q-dialog>
     </q-page-container>
   </q-layout>
 </template>
 
-<script src="https://unpkg.com/localbase/dist/localbase.dev.js"></script>
-
 <script>
-import EssentialLink from "components/EssentialLink.vue";
-import Localbase from "localbase";
+// Lib
+import Localbase from 'localbase'
 
-let db = new Localbase("db");
+// Helpers
+import { generateUUID } from 'src/helpers/uuid'
+
+// Components
+import Header from 'src/components/Header.vue'
+import CreateRecordDialog from 'src/components/CreateRecordDialog.vue'
+import RecordCardsContainer from 'src/components/RecordCardsContainer.vue'
+import EditRecordDialog from 'src/components/EditRecordDialog.vue'
+
+let localbase = new Localbase('db')
 
 export default {
-  data() {
-    return {
-      text: "",
-      data: "teste",
-      name: "",
-      age: "",
-      breed: "",
-      fichaState: false,
-      prompt: false,
-      userData: [],
-      containerFicha: [],
-      fichaDialog: false,
-    };
+  components: {
+    Header,
+    CreateRecordDialog,
+    RecordCardsContainer,
+    EditRecordDialog,
   },
+  data: () => ({
+    displayCreateRecordDialog: false,
+    RecordCardsContainerteRecordDialog: false,
+    displayEditRecordDialog: false,
+    currentEditRecord: {},
+    records: [],
+  }),
   methods: {
-    create() {
-      this.prompt = true;
+    toggleCreateRecordDialog() {
+      this.displayCreateRecordDialog = !this.displayCreateRecordDialog
     },
-    onSave() {
-      if (!this.userData) {
-        return;
-      }
+    toggleShowRecordDialog() {
+      this.displayEditRecordDialog = !this.displayEditRecordDialog
+    },
+    showRecord(record) {
+      this.currentEditRecord = record
 
-      let Ficha = {
-        id: Math.random(),
-        name: this.name,
-        age: this.age,
-        breed: this.breed,
-      };
-      db.collection("fichas").add(Ficha);
-      this.containerFicha.push(Ficha);
-      this.saveFicha();
+      this.toggleShowRecordDialog()
     },
+    async handleCreateRecord(data) {
+      await localbase.collection('records').add({
+        id: generateUUID(),
+        ...data,
+      })
 
-    onClose() {
-      this.prompt = false;
+      this.toggleCreateRecordDialog()
+      this.fetchRecordsFromLocalbase()
     },
-    saveFicha() {
-      console.log(this.userData);
-      this.prompt = false;
-      this.fichaState = true;
+    async handleDeleteRecord({ id }) {
+      await localbase
+        .collection('records')
+        .doc({
+          id,
+        })
+        .delete()
+
+      this.toggleShowRecordDialog()
+      this.fetchRecordsFromLocalbase()
     },
-    removeFicha(id) {
-      db.collection("fichas").doc({ id: id }).delete();
-      console.log("id", id);
-      this.getFicha();
+    async handleEditRecord({ id, record }) {
+      await localbase.collection('records').doc({ id }).update(record)
+
+      this.toggleShowRecordDialog()
+      this.fetchRecordsFromLocalbase()
     },
-    exibirFicha() {
-      console.log("exibindo ficha :D");
-      this.fichaDialog = true;
-    },
-    getFicha() {
-      db.collection("fichas")
-        .get()
-        .then((resp) => {
-          this.userData = resp;
-          this.containerFicha = resp;
-          console.log("ficha inicial", this.userData);
-          this.prompt = false;
-        });
-    },
-    editSave() {
-      let index = this.userData.find((resp) => Ficha.id === id);
-      db.collection("ficha").doc({ id: id }).update({});
+    async fetchRecordsFromLocalbase() {
+      const records = await localbase.collection('records').get()
+
+      this.records = records
     },
   },
   mounted() {
-    this.getFicha();
-    if (this.userData.length > 0) {
-      this.fichaState = !this.fichaState;
-    }
+    this.fetchRecordsFromLocalbase()
   },
-};
+}
 </script>
 <style lang="scss">
 @font-face {
   font-family: Montserrat;
-  src: url("../fonts/montserrat-v15-latin-regular.woff") format("woff");
+  src: url('../fonts/montserrat-v15-latin-regular.woff') format('woff');
 }
 
 div {
@@ -334,7 +143,7 @@ div {
 }
 
 .header {
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   background: linear-gradient(
       125deg,
       rgba(150, 59, 240, 0.672),
@@ -347,7 +156,7 @@ div {
   background: linear-gradient(151.23deg, rgba(175, 92, 215, 0.71), #9150e4);
   box-shadow: 5px 5px 12px -1px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
 }
 
 .q-field--outlined:hover .q-field__control:before {
