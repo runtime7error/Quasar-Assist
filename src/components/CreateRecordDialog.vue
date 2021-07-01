@@ -5,7 +5,7 @@
   >
     <q-form @submit="handleSave" @reset="handleClose" class="q-gutter-md">
       <q-card-section>
-        <div class="text-h6 q-gutter-md">Criação de Ficha</div>
+        <div class="text-h5 text-bold q-gutter-md">Criação de Ficha</div>
       </q-card-section>
       <!-- Nome -->
       <q-input
@@ -94,7 +94,7 @@
         placeholder="Classe"
         v-model="record.classe"
       />
-      <span>Vantagens</span>
+      <span class="text-h6 text-bold">Vantagens</span>
       <q-separator color="white" />
       <!-- Vantagens de Raça -->
       <q-input
@@ -124,7 +124,7 @@
         placeholder="Vantagens de Classe"
         v-model="record.breedPowers"
       />
-      <span>Desvantagens</span>
+      <span class="text-h6 text-bold">Desvantagens</span>
       <q-separator color="white" />
       <!-- Desvantagens de Classe -->
       <q-input
@@ -148,7 +148,7 @@
         placeholder="Desvantagens de Raça"
         v-model="record.breedHandicap"
       />
-      <span>Dados do Personagem</span>
+      <span class="text-h6 text-bold">Dados do Personagem</span>
       <q-separator color="white" />
       <!-- Perícias -->
       <q-input
@@ -174,10 +174,125 @@
         v-model="record.history"
         type="textarea"
       />
-      <span>Características</span>
+      <span class="text-h6 text-bold">Características</span>
+      <q-separator color="white" />
+
+      <!-- Força -->
+      <div>
+        <q-field dark borderless v-model="record.StrValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Força : {{ record.StrValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.StrValue < 1"
+              icon="remove_circle"
+              @click.stop="record.StrValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.StrValue += 1"
+            />
+          </template>
+        </q-field>
+
+        <!-- Habilidade --> 
+        <q-field dark borderless v-model="record.HabValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Habilidade : {{ record.HabValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.HabValue < 1"
+              icon="remove_circle"
+              @click.stop="record.HabValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.HabValue += 1"
+            />
+          </template>
+        </q-field>
+
+        <!-- Resistência -->
+        <q-field dark borderless v-model="record.ResValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Resistência : {{ record.ResValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.ResValue < 1"
+              icon="remove_circle"
+              @click.stop="record.ResValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.ResValue += 1"
+            />
+          </template>
+        </q-field>
+
+        <!-- Poder de Fogo -->
+        <q-field dark borderless v-model="record.PdfValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Poder de Fogo : {{ record.PdfValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.PdfValue < 1"
+              icon="remove_circle"
+              @click.stop="record.PdfValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.PdfValue += 1"
+            />
+          </template>
+        </q-field>
+      </div>
+      <span class="text-h6 text-bold">Poder Mágico</span>
       <q-separator color="white" />
       <div>
-        <q-btn size="md" class="q-mt-lg q-mr-lg" color="red" label="Cancelar" rounded type="reset" />
+        <q-btn
+          size="md"
+          class="q-mt-lg q-mr-lg"
+          color="red"
+          label="Cancelar"
+          rounded
+          type="reset"
+        />
 
         <q-btn
           size="md"
@@ -211,6 +326,10 @@ export default {
       breedHandicap: '',
       expertise: '',
       history: '',
+      HabValue: 0,
+      StrValue: 0,
+      ResValue: 0,
+      PdfValue: 0,
     },
   }),
   methods: {

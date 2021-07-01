@@ -9,15 +9,11 @@
         </div>
         <q-space></q-space>
         <div class="gt-xs">
-          <q-btn rounded flat label="Home" class="q-mr-xs" />
-          <q-btn
-            rounded
-            flat
-            label="Criar"
-            class="q-ml-xs"
-            @click="handleClick"
-          />
-          <q-btn rounded flat label="Fichas" class="q-mr-xs" />
+          <q-btn-group flat rounded>
+            <q-btn label="Home"/>
+            <q-btn label="Criar"  @click="handleClick" />
+            <q-btn label="Fichas" class="q-mr-xs" />
+          </q-btn-group>
         </div>
         <div class="gt-xs">
           <q-input
@@ -36,7 +32,15 @@
           </q-input>
         </div>
         <div class="lt-sm">
-          <q-btn @click="drawer = !drawer" flat dense round icon="menu" aria-label="menu"> </q-btn>
+          <q-btn
+            @click="drawer = !drawer"
+            flat
+            dense
+            round
+            icon="menu"
+            aria-label="menu"
+          >
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -55,22 +59,13 @@
       <q-list>
         <q-item>
           <q-item-section>
-            <q-btn 
-            flat
-            label="Home" 
-            rounded 
-            />
+            <q-btn flat label="Home" rounded />
           </q-item-section>
         </q-item>
-        <q-separator inset color="purple"/>
+        <q-separator inset color="purple" />
         <q-item>
           <q-item-section>
-            <q-btn
-              rounded
-              flat
-              label="Criar"
-              @click="handleClick"
-            />
+            <q-btn rounded flat label="Criar" @click="handleClick" />
           </q-item-section>
         </q-item>
       </q-list>
