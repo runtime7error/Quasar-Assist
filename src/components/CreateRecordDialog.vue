@@ -204,7 +204,7 @@
           </template>
         </q-field>
 
-        <!-- Habilidade --> 
+        <!-- Habilidade -->
         <q-field dark borderless v-model="record.HabValue">
           <template v-slot:control>
             <div class="self-center no-outline" tabindex="0">
@@ -285,6 +285,135 @@
       <span class="text-h6 text-bold">Poder Mágico</span>
       <q-separator color="white" />
       <div>
+        <!-- Focus de Fogo -->
+        <q-field dark borderless v-model="record.FireValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Fogo : {{ record.FireValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.FireValue < 1"
+              icon="remove_circle"
+              @click.stop="record.FireValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.FireValue += 1"
+            />
+          </template>
+        </q-field>
+
+        <!-- Focus de Terra -->
+        <q-field dark borderless v-model="record.EarthValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Terra : {{ record.EarthValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.EarthValue < 1"
+              icon="remove_circle"
+              @click.stop="record.EarthValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.EarthValue += 1"
+            />
+          </template>
+        </q-field>
+        <!-- Focus de Luz -->
+        <q-field dark borderless v-model="record.LightValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Luz : {{ record.LightValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.LightValue < 1"
+              icon="remove_circle"
+              @click.stop="record.LightValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.LightValue += 1"
+            />
+          </template>
+        </q-field>
+        <!-- Focus de Trevas -->
+        <q-field dark borderless v-model="record.DarkValue">
+          <template v-slot:control>
+            <div class="self-center no-outline" tabindex="0">
+              Trevas : {{ record.DarkValue }}
+            </div>
+          </template>
+          <template v-slot:append>
+            <q-btn
+              color="white"
+              flat
+              round
+              :disable="record.DarkValue < 1"
+              icon="remove_circle"
+              @click.stop="record.DarkValue -= 1"
+            />
+            <q-btn
+              color="white"
+              flat
+              round
+              icon="add_circle"
+              @click.stop="record.DarkValue += 1"
+            />
+          </template>
+        </q-field>
+      </div>
+      <span class="text-h6 text-bold">Poder Mágico</span>
+      <q-separator color="white" />
+      <q-input
+        readonly
+        rounded
+        dense
+        class="q-mb-md"
+        outlined
+        autogrow
+        color="purple-4"
+        bg-color="white"
+        placeholder="Mágias Conhecidas"
+        v-model="record.knowMagic"
+        type="textarea"
+      />
+      <q-select
+        rounded
+        dense
+        class="q-mb-md"
+        outlined
+        multiple
+        v-model="model"
+        :options="options"
+        bg-color="white"
+        style="width: 250px"
+      />
+      <div>
         <q-btn
           size="md"
           class="q-mt-lg q-mr-lg"
@@ -293,7 +422,7 @@
           rounded
           type="reset"
         />
-  
+    
         <q-btn
           size="md"
           class="q-mt-lg"
@@ -313,6 +442,7 @@ export default {
   emits: ['create', 'close'],
   data: () => ({
     display: true,
+    options: ['Bola de Fogo', 'A Seta Infalível de Talude'],
     record: {
       name: '',
       age: '',
@@ -330,6 +460,11 @@ export default {
       StrValue: 0,
       ResValue: 0,
       PdfValue: 0,
+      FireValue: 0,
+      EarthValue: 0,
+      WindValue: 0,
+      LightValue: 0,
+      DarkValue: 0,
     },
   }),
   methods: {

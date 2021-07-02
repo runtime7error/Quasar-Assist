@@ -82,6 +82,7 @@ export default {
     displayEditRecordDialog: false,
     currentEditRecord: {},
     records: [],
+    magicRecords: [],
   }),
   methods: {
     toggleCreateRecordDialog() {
