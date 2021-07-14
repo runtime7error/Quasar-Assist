@@ -399,19 +399,21 @@
         color="purple-4"
         bg-color="white"
         placeholder="Mágias Conhecidas"
-        v-model="record.knowMagic"
+        v-model='record.selectdOptions'
         type="textarea"
       />
       <q-select
         rounded
         dense
-        class="q-mb-md"
         outlined
-        multiple
-        v-model="model"
-        :options="options"
         bg-color="white"
-        style="width: 250px"
+        options-dark
+        color="purple-4"
+        class="q-mb-md"
+        v-model="record.selectdOptions"
+        :options="options"
+        multiple 
+        style="width: 250px; color: black"
       />
       <div>
         <q-btn
@@ -442,7 +444,7 @@ export default {
   emits: ['create', 'close'],
   data: () => ({
     display: true,
-    options: ['Bola de Fogo', 'A Seta Infalível de Talude'],
+    options: ['Magia 1', 'Magia 2'],
     record: {
       name: '',
       age: '',
@@ -465,6 +467,7 @@ export default {
       WindValue: 0,
       LightValue: 0,
       DarkValue: 0,
+      selectedOptions:[],
     },
   }),
   methods: {
