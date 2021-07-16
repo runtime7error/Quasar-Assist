@@ -82,7 +82,10 @@ export default {
     displayEditRecordDialog: false,
     currentEditRecord: {},
     records: [],
-    magicRecords: [],
+    magicRecords: [{
+      id:generateUUID(),
+      name:"Magia 1"
+    }],
   }),
   methods: {
     toggleCreateRecordDialog() {
@@ -104,6 +107,11 @@ export default {
 
       this.toggleCreateRecordDialog()
       this.fetchRecordsFromLocalbase()
+    },
+    async handleCreateMagicRecord(data){
+      await localbase.collection('magicRecords').add({
+        
+      })
     },
     async handleDeleteRecord({ id }) {
       await localbase
@@ -127,6 +135,11 @@ export default {
 
       this.records = records
     },
+    async fetchMagicRecordsFromLocalbase(){
+      const MagicRecords = await localbase.collection('magicRecords').get()
+
+      this.magicRecords = this.magicRecords
+    }
   },
   mounted() {
     this.fetchRecordsFromLocalbase()
