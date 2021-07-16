@@ -7,7 +7,7 @@
     <q-page-container v-if="records.length == 0" class="row text-h6">
       <div class="fixed-center" style="min-width: 200px">
         <q-card bordered dark class="null-card dialog-border">
-          <q-card-section class="row justify-center">
+          <q-card-section class="row justify-center" style="text-align: center">
             Parece que você não possui fichas cadastradas, clique no botão para
             criar uma agora mesmo!
             <q-btn
@@ -182,5 +182,17 @@ div {
   border-style: groove;
   border-width: 1pt;
   border-radius: 8pt;
+}
+
+.tableMenu {
+  display: block;
+  margin-top: 20px;
+}
+
+@media (max-width: 599px) {
+  .dialog-responsive {
+    max-width: 100vw ;
+    width: 100% ;
+  }
 }
 </style>
