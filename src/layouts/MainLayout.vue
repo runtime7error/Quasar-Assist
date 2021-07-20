@@ -7,7 +7,7 @@
     <q-page-container v-if="records.length == 0" class="row text-h6">
       <div class="fixed-center" style="min-width: 200px">
         <q-card bordered dark class="null-card dialog-border">
-          <q-card-section class="row justify-center" style="text-align: center">
+          <q-card-section class="row justify-center">
             Parece que você não possui fichas cadastradas, clique no botão para
             criar uma agora mesmo!
             <q-btn
@@ -82,10 +82,7 @@ export default {
     displayEditRecordDialog: false,
     currentEditRecord: {},
     records: [],
-    magicRecords: [{
-      id:generateUUID(),
-      name:"Magia 1"
-    }],
+    magics: [{ id: generateUUID(), name: 'bola de fogo' }],
   }),
   methods: {
     toggleCreateRecordDialog() {
@@ -108,10 +105,14 @@ export default {
       this.toggleCreateRecordDialog()
       this.fetchRecordsFromLocalbase()
     },
-    async handleCreateMagicRecord(data){
-      await localbase.collection('magicRecords').add({
-        
-      })
+    async handleCreateMagicRecord(data) {
+      if (this.magicRecords.length < 1) {
+        let magics = {
+          magic: this.magics,
+        }
+        await localbase.collection('magicRecords').add({ magics })
+        this.fetchMagicRecordsFromLocalbase()
+      }
     },
     async handleDeleteRecord({ id }) {
       await localbase
@@ -132,17 +133,20 @@ export default {
     },
     async fetchRecordsFromLocalbase() {
       const records = await localbase.collection('records').get()
-
       this.records = records
     },
-    async fetchMagicRecordsFromLocalbase(){
-      const MagicRecords = await localbase.collection('magicRecords').get()
+    async fetchMagicRecordsFromLocalbase() {
+      const magicRecords = await localbase.collection('magicRecords').get()
 
-      this.magicRecords = this.magicRecords
-    }
+      this.magicRecords = magicRecords
+      this.handleCreateMagicRecord()
+    },
   },
   mounted() {
+    this.fetchMagicRecordsFromLocalbase()
     this.fetchRecordsFromLocalbase()
+    // this.handleCreateMagicRecord()
+    console.log('magias magicas', this.magicRecords)
   },
 }
 </script>
@@ -182,17 +186,5 @@ div {
   border-style: groove;
   border-width: 1pt;
   border-radius: 8pt;
-}
-
-.tableMenu {
-  display: block;
-  margin-top: 20px;
-}
-
-@media (max-width: 599px) {
-  .dialog-responsive {
-    max-width: 100vw ;
-    width: 100% ;
-  }
 }
 </style>
